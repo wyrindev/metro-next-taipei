@@ -1,0 +1,29 @@
+name: metro_next_taipei
+description: "A minimalist, cross-platform companion app for the Taipei Metro system."
+
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  http: ^1.5.0
+  dynamic_color: ^1.8.1
+  geolocator: ^14.0.2
+  permission_handler: ^12.0.1
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
