@@ -312,7 +312,14 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(l10n.findNearestStation),
+                            Expanded(
+                              child: Text(
+                                l10n.findNearestStation,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
                             Text(
                               _nearbyStations == 'auto'
                                   ? l10n.locatingAuto
@@ -327,6 +334,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                         ),
                       ),
                       subtitle: SegmentedButton<String>(
+                        showSelectedIcon: false,
                         segments: [
                           ButtonSegment(value: 'auto', label: Text(l10n.auto)),
                           ButtonSegment(
@@ -449,6 +457,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                             ),
                           ),
                           subtitle: SegmentedButton<String>(
+                            showSelectedIcon: false,
                             segments: [
                               ButtonSegment(
                                 value: 'system',
