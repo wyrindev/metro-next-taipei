@@ -4,7 +4,7 @@
 </div>
 
 <div align="center">
-  <p>A minimalist, cross-platform companion app for the Taipei Metro system.</p>
+  <p>A minimalist, cross-platform companion app for the Taipei Metro (TRTC) system.</p>
 </div>
 
 [正體中文 (Traditional Chinese)](README.zh-TW.md)
@@ -14,25 +14,28 @@
 | Screenshot 1 | Screenshot 2 |
 | :---: | :---: |
 | ![App Screenshot 1](docs/images/screenshot.png) | ![App Screenshot 2](docs/images/screenshot1.png) |
-| *App Screenshot 1* | *App Screenshot 2* |
+| *Home & Nearest Station* | *Bilingual Stations Search* |
 
 ## Features
 
-*   **Real-time Train Countdown:** Get live arrival and departure information for all metro lines.
-*   **Nearest Station Finder:** Instantly locate the metro station closest to you using your device's location.
+* 🚇 **Real-Time Countdown:** Get live countdowns for the next and following trains on all metro lines.
+* 📍 **Nearest Station Finder:** Instantly locate the closest metro station to you.
+* 🗺️ **Station Details & Facilities:** Access entrance/exit locations, elevators, escalators, and station amenities.
+* 🌓 **Clean Design & Themes:** A minimalist Material 3 interface with beautiful light and dark mode choices.
+* 🌐 **Bilingual Support:** Smoothly switch between Chinese and English.
 
-## TODO
+## Project Architecture
 
-*   **Comprehensive Station Details:** Access in-depth information about every station, including:
-    *   Station layout and maps.
-    *   Exit and entrance locations.
-    *   Availability of facilities like elevators, escalators, restrooms, ATMs, and charging stations.
-*   **English Support:** Add localization for English language users.
+The codebase follows a clean, consistent modular structure:
+* `lib/models/`: Encapsulates data models (e.g. `train_model.dart`).
+* `lib/screens/`: Views and screens (e.g. `dashboard_screen.dart`, `stations_overview_screen.dart`, `settings_screen.dart`, `station_detail_screen.dart`).
+* `lib/services/`: Services and logic handlers (e.g. `database_service.dart`, `api_service.dart`, `location_service.dart`, `locale_service.dart`, `theme_service.dart`).
+* `lib/widgets/`: Reusable UI widgets (e.g. `train_card.dart`, `nearest_station_card.dart`).
 
 ## Supported Platforms
 
-*   Android
-*   Web
+* Android
+* Web
 
 ## Download
 
@@ -42,47 +45,43 @@ You can download the latest Android APK from the [releases page](https://github.
 
 ### Prerequisites
 
-*   [Flutter SDK](https://flutter.dev/docs/get-started/install)
+* [Flutter SDK](https://flutter.dev/docs/get-started/install)
 
 ### Installation
 
-1.  Clone the repository:
-    ```sh
-    git clone https://github.com/wyrindev/metro-next-taipei.git
-    ```
-2.  Navigate to the project directory:
-    ```sh
-    cd metro-next-taipei
-    ```
-3.  Install the dependencies:
-    ```sh
-    flutter pub get
-    ```
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/wyrindev/metro-next-taipei.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd metro-next-taipei
+   ```
+3. Install dependencies:
+   ```sh
+   flutter pub get
+   ```
 
 ### Running the Application
 
-*   Run the app on your connected device or emulator:
-    ```sh
-    flutter run
-    ```
+* Run the app:
+  ```sh
+  flutter run
+  ```
 
 ## Building for Production
 
 ### Android
 
-*   To build an APK:
-    ```sh
-    flutter build apk
-    ```
-*   To build an App Bundle:
-    ```sh
-    flutter build appbundle
-    ```
+* Build an APK:
+  ```sh
+  flutter build apk
+  ```
 
 ### Web
 
-*   To build the web application:
-    ```sh
-    flutter build web
-    ```
+* Build the web application:
+  ```sh
+  flutter build web
+  ```
 The output will be in the `build/web` directory.

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:metro_next_taipei/models/train.dart';
+import 'package:metro_next_taipei/models/train_model.dart';
 
 Future<Map<String, Train>> _processTrainData(
   Map<String, dynamic> jsonData,

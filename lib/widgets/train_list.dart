@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:metro_next_taipei/models/train.dart';
+import 'package:metro_next_taipei/models/train_model.dart';
 import 'package:metro_next_taipei/widgets/train_card.dart';
 
 class TrainList extends StatefulWidget {

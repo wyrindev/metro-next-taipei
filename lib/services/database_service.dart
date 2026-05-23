@@ -1,3 +1,5 @@
+import 'package:metro_next_taipei/services/database_route_service.dart';
+
 const Map<String, dynamic> metroDb = {
   "七張站": {
     "Station": "七張站",
@@ -4826,3 +4828,57 @@ const Map<String, dynamic> metroDb = {
     "unique_destinations_count": 3,
   },
 };
+
+String getLocalizedStationName(String name, bool isEnglish) {
+  if (!isEnglish || name.isEmpty) return name;
+
+  // 1. Try exact match in metroDb
+  if (metroDb.containsKey(name)) {
+    final en = metroDb[name]?['StationEn']?.toString();
+    if (en != null && en.isNotEmpty) return en;
+  }
+
+  // 2. Try adding '站' in metroDb
+  final withStn = name.endsWith('站') ? name : '$name站';
+  if (metroDb.containsKey(withStn)) {
+    final en = metroDb[withStn]?['StationEn']?.toString();
+    if (en != null && en.isNotEmpty) return en;
+  }
+
+  // 3. Try removing '站' in metroDb
+  if (name.endsWith('站')) {
+    final withoutStn = name.substring(0, name.length - 1);
+    if (metroDb.containsKey(withoutStn)) {
+      final en = metroDb[withoutStn]?['StationEn']?.toString();
+      if (en != null && en.isNotEmpty) return en;
+    }
+  }
+
+  // 4. Try matching in metroDbRoute values
+  final nameWithoutStn = name.endsWith('站') ? name.substring(0, name.length - 1) : name;
+  for (var line in metroDbRoute.values) {
+    if (line is Map) {
+      for (var routeData in line.values) {
+        if (routeData is List && routeData.length >= 2) {
+          final zh = routeData[0].toString();
+          final en = routeData[1].toString();
+          final zhNoStn = zh.endsWith('站') ? zh.substring(0, zh.length - 1) : zh;
+          if (zh == name || zh == withStn || zhNoStn == nameWithoutStn) {
+            return en;
+          }
+        }
+      }
+    }
+  }
+
+  // 5. Try suffix-free matching in metroDb keys
+  for (final key in metroDb.keys) {
+    final keyWithoutStn = key.endsWith('站') ? key.substring(0, key.length - 1) : key;
+    if (keyWithoutStn == nameWithoutStn) {
+      final en = metroDb[key]?['StationEn']?.toString();
+      if (en != null && en.isNotEmpty) return en;
+    }
+  }
+
+  return name;
+}

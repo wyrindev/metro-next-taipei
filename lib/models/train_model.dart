@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metro_next_taipei/l10n/app_localizations.dart';
+import 'package:metro_next_taipei/services/locale_service.dart';
+import 'package:metro_next_taipei/services/database_service.dart';
 
 class Train {
   final String stnid;
@@ -107,5 +110,33 @@ class Train {
     } else {
       return '0分${s.toString()}秒';
     }
+  }
+
+  String getLocalizedCountdown(BuildContext context) {
+    final rt = remainingTime;
+    final l10n = AppLocalizations.of(context)!;
+    if (rt <= 0) return l10n.arrived;
+    if (rt <= 35) return l10n.approaching;
+    final rounded = ((rt + 4) ~/ 5) * 5;
+    final m = rounded ~/ 60;
+    final s = rounded % 60;
+    if (LocaleService.instance.currentLocale.languageCode == 'en') {
+      if (m > 0) {
+        return '${m}m ${s.toString().padLeft(2, '0')}s';
+      } else {
+        return '${s}s';
+      }
+    } else {
+      if (m > 0) {
+        return '$m分${s.toString().padLeft(2, '0')}秒';
+      } else {
+        return '0分${s.toString()}秒';
+      }
+    }
+  }
+
+  String getLocalizedDestination(BuildContext context) {
+    final isEnglish = LocaleService.instance.currentLocale.languageCode == 'en';
+    return getLocalizedStationName(destination, isEnglish);
   }
 }

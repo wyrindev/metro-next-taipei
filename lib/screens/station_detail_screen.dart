@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:metro_next_taipei/models/train.dart';
+import 'package:metro_next_taipei/l10n/app_localizations.dart';
+import 'package:metro_next_taipei/models/train_model.dart';
 import 'package:metro_next_taipei/widgets/train_list.dart';
-import 'package:metro_next_taipei/services/get_countdown.dart';
-import 'package:metro_next_taipei/services/database.dart';
+import 'package:metro_next_taipei/services/api_service.dart';
+import 'package:metro_next_taipei/services/database_service.dart';
+import 'package:metro_next_taipei/services/locale_service.dart';
 
 class CommonStationDetailSheet extends StatefulWidget {
   final String stationKey;
@@ -29,6 +31,10 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (widget.stationKey.isNotEmpty && _cache.containsKey(widget.stationKey)) {
+      _allTrains = _cache[widget.stationKey]!;
+      _loading = false;
+    }
     _fetchTrains();
     _startTimers();
   }
@@ -59,6 +65,19 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.stationKey != widget.stationKey) {
       _apiTimer?.cancel();
+      if (widget.stationKey.isNotEmpty) {
+        if (_cache.containsKey(widget.stationKey)) {
+          setState(() {
+            _allTrains = _cache[widget.stationKey]!;
+            _loading = false;
+          });
+        } else {
+          setState(() {
+            _allTrains = {};
+            _loading = true;
+          });
+        }
+      }
       _fetchTrains();
       _startTimers();
     }
@@ -66,6 +85,12 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
 
   Future<void> _fetchTrains() async {
     if (!mounted) return;
+    if (widget.stationKey.isNotEmpty && _cache.containsKey(widget.stationKey)) {
+      setState(() {
+        _allTrains = _cache[widget.stationKey]!;
+        _loading = false;
+      });
+    }
     setState(() => _isRefreshing = true);
 
     try {
@@ -176,7 +201,17 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
                 children: [
                   Expanded(
                     child: Text(
-                      widget.stationKey,
+                      (() {
+                        final isEnglish = LocaleService.instance.currentLocale.languageCode == 'en';
+                        final parts = widget.stationKey.split(' ');
+                        if (parts.length >= 2) {
+                          final id = parts[0];
+                          final nameZh = parts[1];
+                          final nameEn = metroDb[nameZh]?['StationEn'] ?? nameZh;
+                          return isEnglish ? "$id $nameEn" : widget.stationKey;
+                        }
+                        return widget.stationKey;
+                      }()),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -184,7 +219,7 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
                   ),
                   IconButton(
                     icon: const Icon(Icons.refresh_rounded),
-                    tooltip: '重新整理',
+                    tooltip: AppLocalizations.of(context)!.refreshStationTooltip,
                     onPressed: _isRefreshing ? null : _fetchTrains,
                   ),
                   IconButton(
@@ -202,9 +237,9 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
                       child: Center(child: CircularProgressIndicator()),
                     )
                   : _allTrains.isEmpty
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 200,
-                          child: Center(child: Text('目前無列車資訊')),
+                          child: Center(child: Text(AppLocalizations.of(context)!.noTrainsInfo)),
                         )
                       : ListView(
                           shrinkWrap: true,
@@ -214,7 +249,7 @@ class _CommonStationDetailSheetState extends State<CommonStationDetailSheet>
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 12.0, left: 4.0),
                                 child: Text(
-                                  '無法取得即時資訊，目前顯示快取資料。',
+                                  AppLocalizations.of(context)!.offlineCacheWarning,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: Colors.orange,
                                     fontWeight: FontWeight.w500,

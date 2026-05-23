@@ -1,62 +1,36 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:metro_next_taipei/services/database.dart';
+import 'package:metro_next_taipei/services/database_service.dart';
 
-import 'package:flutter/foundation.dart' show kIsWeb;
+class LocationResult {
+  final Position? position;
+  final bool permissionDenied;
+  LocationResult(this.position, {this.permissionDenied = false});
+}
 
-Future<bool> _checkAndRequestLocationPermission(BuildContext context) async {
+Future<LocationResult> getCurrentPosition(BuildContext context) async {
   LocationPermission permission = await Geolocator.checkPermission();
 
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
   }
 
-  if (permission == LocationPermission.deniedForever) {
-    if (context.mounted) {
-      final shouldRetry = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('需要位置權限'),
-          content: const Text('請啟用位置權限以尋找附近捷運站。'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('取消'),
-            ),
-            if (!kIsWeb)
-              TextButton(
-                onPressed: () => openAppSettings(),
-                child: const Text('打開設定'),
-              ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('重試'),
-            ),
-          ],
-        ),
-      );
-
-      if (shouldRetry == true && context.mounted) {
-        return await _checkAndRequestLocationPermission(context);
-      }
-    }
-    return false;
+  if (permission == LocationPermission.deniedForever || permission == LocationPermission.denied) {
+    return LocationResult(null, permissionDenied: true);
   }
 
-  return await Geolocator.isLocationServiceEnabled();
-}
+  if (!await Geolocator.isLocationServiceEnabled()) {
+    return LocationResult(null);
+  }
 
-Future<Position?> getCurrentPosition(BuildContext context) async {
-  final ok = await _checkAndRequestLocationPermission(context);
-  if (!ok) return null;
   try {
-    return await Geolocator.getCurrentPosition(
+    final pos = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
+    return LocationResult(pos);
   } catch (_) {
-    return null;
+    return LocationResult(null);
   }
 }
 
