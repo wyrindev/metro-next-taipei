@@ -14,7 +14,7 @@
 | Screenshot 1 | Screenshot 2 |
 | :---: | :---: |
 | ![App Screenshot 1](docs/images/screenshot.png) | ![App Screenshot 2](docs/images/screenshot1.png) |
-| *Home & Nearest Station* | *Bilingual Stations Search* |
+| *Home & Nearest Station* | *Stations Search* |
 
 ## Features
 
@@ -40,6 +40,10 @@ The codebase follows a clean, consistent modular structure:
 ## Download
 
 You can download the latest Android APK from the [releases page](https://github.com/wyrindev/metro-next-taipei/releases).
+
+## Translation
+
+You can help translate MetroNext Taipei into your language via [Weblate](https://weblate.wyrin.dev/projects/metro-next-taipei).
 
 ## Getting Started
 

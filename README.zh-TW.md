@@ -14,7 +14,7 @@
 | 螢幕截圖 1 | 螢幕截圖 2 |
 | :---: | :---: |
 | ![App 螢幕截圖 1](docs/images/screenshot.png) | ![App 螢幕截圖 2](docs/images/screenshot1.png) |
-| *首頁與最近車站* | *雙語車站總覽與搜尋* |
+| *首頁與最近車站* | *車站總覽與搜尋* |
 
 ## 功能特點
 
@@ -34,12 +34,16 @@
 
 ## 支援平台
 
-* Android=
+* Android
 * Web
 
 ## 下載
 
 您可以從 [發佈頁面](https://github.com/wyrindev/metro-next-taipei/releases) 下載最新的 Android APK。
+
+## 翻譯 / 在地化
+
+您可以透過 [Weblate](https://weblate.wyrin.dev/projects/metro-next-taipei) 協助我們將 MetroNext Taipei 翻譯成更多語言。
 
 ## 開始使用
 
