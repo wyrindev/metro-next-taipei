@@ -16,7 +16,7 @@ plugins {
 android {
     namespace = "dev.wyrin.metronext.taipei"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "30.0.14904198"
+    ndkVersion = flutter.ndkVersion
 
     signingConfigs {
         create("release") {
