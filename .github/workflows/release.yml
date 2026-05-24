@@ -7,15 +7,77 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  actions: read
 
 jobs:
-  build:
-    name: Build & Release APKs
+  check-release:
+    name: Check if Release Already Exists
     runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      tag_name: ${{ steps.check.outputs.tag_name }}
+      version_name: ${{ steps.check.outputs.version_name }}
+      already_released: ${{ steps.check.outputs.already_released }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Tag and Check Release Status
+        id: check
+        run: |
+          # Determine the tag to use
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # Triggered by tag push
+            TAG_NAME="${{ github.ref #refs/tags/ }}"
+          else
+            # Triggered by workflow_dispatch - get latest tag
+            TAG_NAME=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+            if [ -z "$TAG_NAME" ]; then
+              echo "❌ No tags found in the repository!"
+              echo "should_release=false" >> $GITHUB_OUTPUT
+              echo "already_released=false" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          
+          echo "📌 Using tag: $TAG_NAME"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          
+          # Extract version name (remove 'v' prefix)
+          VERSION_NAME="${TAG_NAME#v}"
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          
+          # Check if release already exists for this tag
+          RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME"
+          RELEASE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${{ github.token }}" \
+            "$RELEASE_URL")
+          
+          if [ "$RELEASE_STATUS" = "200" ]; then
+            echo "⚠️  Release for $TAG_NAME already exists!"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+            echo "already_released=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No release found for $TAG_NAME, proceeding with build..."
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "already_released=false" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    name: Build & Release APKs
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.check-release.outputs.tag_name }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -122,12 +184,13 @@ jobs:
           | MetroNext-Taipei-${{ env.VERSION_NAME }}-armeabi-v7a.apk | $SHA_ARMEABI |
           | MetroNext-Taipei-${{ env.VERSION_NAME }}-x86_64.apk | $SHA_X86_64 |
 
-          **Full Changelog**: https://github.com/wyrindev/metro-next-taipei/commits/v${{ env.VERSION_NAME }}
+          **Full Changelog**: https://github.com/wyrindev/metro-next-taipei/commits/${{ needs.check-release.outputs.tag_name }}
           EOF
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.check-release.outputs.tag_name }}
           files: release/*.apk
           name: Version ${{ env.VERSION_NAME }}
           body_path: release_notes.md
@@ -136,3 +199,14 @@ jobs:
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-already-released:
+    name: Notify - Already Released
+    needs: check-release
+    if: needs.check-release.outputs.already_released == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Already Released Notice
+        run: |
+          echo "⏭️  Release ${{ needs.check-release.outputs.tag_name }} (v${{ needs.check-release.outputs.version_name }}) already exists!"
+          echo "Skipping build and release..."
