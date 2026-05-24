@@ -13,7 +13,7 @@
 
 | 螢幕截圖 1 | 螢幕截圖 2 |
 | :---: | :---: |
-| ![App 螢幕截圖 1](docs/images/screenshot.png) | ![App 螢幕截圖 2](docs/images/screenshot1.png) |
+| ![App 螢幕截圖 1](docs/images/zh-TW/screenshot.png) | ![App 螢幕截圖 2](docs/images/zh-TW/screenshot1.png) |
 | *首頁與最近車站* | *車站總覽與搜尋* |
 
 ## 功能特點

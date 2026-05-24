@@ -42,6 +42,16 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
 
+      - name: Configure Keystore and key.properties
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/release-key.jks
+          cat <<EOF > android/key.properties
+          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=release-key.jks
+          EOF
+
       - name: Build Universal APK
         run: flutter build apk --release
 
