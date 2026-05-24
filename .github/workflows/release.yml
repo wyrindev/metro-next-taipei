@@ -45,6 +45,13 @@ jobs:
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          
+          # Determine if it's a pre-release (contains alpha, beta, rc, dev, etc.)
+          if echo "$VERSION_NAME" | grep -iE '(alpha|beta|rc|dev|pre)' > /dev/null; then
+            echo "IS_PRERELEASE=true" >> $GITHUB_ENV
+          else
+            echo "IS_PRERELEASE=false" >> $GITHUB_ENV
+          fi
 
       - name: Configure Keystore and key.properties
         run: |
@@ -119,13 +126,13 @@ jobs:
           EOF
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: release/*.apk
           name: Version ${{ env.VERSION_NAME }}
           body_path: release_notes.md
           draft: false
-          prerelease: false
+          prerelease: ${{ env.IS_PRERELEASE }}
+          generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
