@@ -86,6 +86,7 @@ class TrainCard extends StatelessWidget {
         borderRadius: 12.0,
         thickness: 2.5,
         animate: _isHighlight,
+        controller: controller,
         child: card,
       ),
     );

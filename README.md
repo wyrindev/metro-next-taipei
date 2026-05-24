@@ -20,9 +20,7 @@
 
 * 🚇 **Real-Time Countdown:** Get live countdowns for the next and following trains on all metro lines.
 * 📍 **Nearest Station Finder:** Instantly locate the closest metro station to you.
-* 🗺️ **Station Details & Facilities:** Access entrance/exit locations, elevators, escalators, and station amenities.
 * 🌓 **Clean Design & Themes:** A minimalist Material 3 interface with beautiful light and dark mode choices.
-* 🌐 **Bilingual Support:** Smoothly switch between Chinese and English.
 
 ## Project Architecture
 

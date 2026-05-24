@@ -8,6 +8,7 @@ class AnimatedGradientBorder extends StatefulWidget {
   final double borderRadius;
   final bool animate;
   final Duration duration;
+  final AnimationController? controller;
 
   const AnimatedGradientBorder({
     super.key,
@@ -17,6 +18,7 @@ class AnimatedGradientBorder extends StatefulWidget {
     this.borderRadius = 12.0,
     this.animate = true,
     this.duration = const Duration(milliseconds: 2000),
+    this.controller,
   });
 
   @override
@@ -25,47 +27,63 @@ class AnimatedGradientBorder extends StatefulWidget {
 
 class _AnimatedGradientBorderState extends State<AnimatedGradientBorder>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  AnimationController? _internalController;
   late Animation<double> _animation;
+
+  AnimationController get _effectiveController => widget.controller ?? _internalController!;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _initController();
+  }
+
+  void _initController() {
+    if (widget.controller == null) {
+      _internalController = AnimationController(
+        vsync: this,
+        duration: widget.duration,
+      );
+    }
     _animation = CurvedAnimation(
-      parent: _controller,
+      parent: _effectiveController,
       curve: Curves.fastOutSlowIn,
     );
-    if (widget.animate) {
-      _controller.repeat();
+    if (widget.animate && widget.controller == null) {
+      _internalController!.repeat();
     }
   }
 
   @override
   void didUpdateWidget(covariant AnimatedGradientBorder oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.animate != oldWidget.animate) {
-      if (widget.animate) {
-        _controller.repeat();
-      } else {
-        _controller.stop();
-        _controller.reset();
+    if (widget.controller != oldWidget.controller) {
+      if (oldWidget.controller == null) {
+        _internalController?.dispose();
+        _internalController = null;
       }
-    }
-    if (widget.duration != oldWidget.duration) {
-      _controller.duration = widget.duration;
-      if (widget.animate) {
-        _controller.repeat();
+      _initController();
+    } else if (widget.controller == null) {
+      if (widget.animate != oldWidget.animate) {
+        if (widget.animate) {
+          _internalController!.repeat();
+        } else {
+          _internalController!.stop();
+          _internalController!.reset();
+        }
+      }
+      if (widget.duration != oldWidget.duration) {
+        _internalController!.duration = widget.duration;
+        if (widget.animate) {
+          _internalController!.repeat();
+        }
       }
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _internalController?.dispose();
     super.dispose();
   }
 

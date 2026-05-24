@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:metro_next_taipei/l10n/app_localizations.dart';
 import 'package:metro_next_taipei/services/theme_service.dart';
 import 'package:metro_next_taipei/services/locale_service.dart';
+import 'package:metro_next_taipei/utils/language_data.dart';
 
 class AppSettingsScreen extends StatefulWidget {
   const AppSettingsScreen({super.key});
@@ -17,7 +18,7 @@ class AppSettingsScreen extends StatefulWidget {
 }
 
 class _AppSettingsScreenState extends State<AppSettingsScreen> {
-  static const String appVersion = 'v1.0.0-beta';
+  static const String appVersion = 'v1.0.0';
   String _nearbyStations = 'auto'; // auto, manual, off
   double _refreshInterval = 10.0;
   bool _isCheckingUpdate = false;
@@ -46,7 +47,14 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
   }
 
   void _showLanguageDialog() {
-    String tempLanguage = LocaleService.instance.currentLocale.languageCode;
+    final isSystem = LocaleService.instance.isSystemLocale;
+    final currentLocale = LocaleService.instance.currentLocale;
+    String tempLanguage = isSystem
+        ? 'system'
+        : (currentLocale.languageCode == 'en'
+            ? 'en'
+            : (currentLocale.countryCode == 'TW' ? 'zh_TW' : 'zh'));
+
     showDialog(
       context: context,
       builder: (context) {
@@ -62,18 +70,26 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                     setStateDialog(() => tempLanguage = v);
                   }
                 },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile<String>(
-                      value: 'zh',
-                      title: Text(l10n.chinese),
-                    ),
-                    RadioListTile<String>(
-                      value: 'en',
-                      title: Text(l10n.english),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RadioListTile<String>(
+                        value: 'system',
+                        title: Text(l10n.system),
+                      ),
+                      ...AppLocalizations.supportedLocales.map((locale) {
+                        final String value = locale.countryCode != null && locale.countryCode!.isNotEmpty
+                            ? '${locale.languageCode}_${locale.countryCode}'
+                            : locale.languageCode;
+                        final String label = getNativeLanguageName(locale);
+                        return RadioListTile<String>(
+                          value: value,
+                          title: Text(label),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
               actions: [
@@ -83,9 +99,15 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await LocaleService.instance.setLocale(
-                      Locale(tempLanguage),
-                    );
+                    if (tempLanguage == 'system') {
+                      await LocaleService.instance.setLocale(null);
+                    } else {
+                      final parts = tempLanguage.split('_');
+                      final newLocale = parts.length == 2 
+                          ? Locale(parts[0], parts[1]) 
+                          : Locale(parts[0]);
+                      await LocaleService.instance.setLocale(newLocale);
+                    }
                     if (context.mounted) {
                       Navigator.pop(context);
                     }
@@ -211,8 +233,18 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final String errorDetail = (e.toString().contains('SocketException') ||
+                e.toString().contains('ClientException') ||
+                e.toString().contains('Failed host lookup') ||
+                e.toString().contains('errno = 7') ||
+                e.toString().contains('Connection refused') ||
+                e.toString().contains('Network is unreachable') ||
+                e.toString().contains('Connection timed out'))
+            ? l10n.networkError
+            : e.toString();
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.updateCheckFailed(e.toString()))),
+          SnackBar(content: Text(l10n.updateCheckFailed(errorDetail))),
         );
       }
     } finally {
@@ -290,11 +322,15 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                         vertical: 4,
                       ),
                       title: Text(l10n.language),
-                      trailing: Text(
-                        LocaleService.instance.currentLocale.languageCode ==
-                                'en'
-                            ? 'English'
-                            : '中文',
+                      trailing: Text(() {
+                          final isSystem = LocaleService.instance.isSystemLocale;
+                          final locale = LocaleService.instance.currentLocale;
+                          if (isSystem) {
+                            return l10n.system;
+                          } else {
+                            return getNativeLanguageName(locale);
+                          }
+                        }(),
                         style: textTheme.bodyMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),

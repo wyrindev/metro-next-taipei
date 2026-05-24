@@ -1,21 +1,87 @@
 {
   "@@locale": "en",
-  "appTitle": "MetroNext",
-  "home": "Home",
-  "stations": "Stations",
-  "settings": "Settings",
-  "general": "General",
-  "language": "Language",
-  "chinese": "中文 (Chinese)",
-  "english": "English",
+  "about": "About",
+  "addToFavorites": "Add to Favorites",
+  "appearance": "Appearance",
+  "approaching": "Approaching",
+  "arrived": "Arrived",
+  "auto": "Auto",
+  "boundFor": "Bound for {destination}",
+  "@boundFor": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "checkUpdate": "Check for Updates",
+  "clearSettingsAndFavorites": "Clear settings and favorites",
+  "commonStations": "Favorite Stations",
+  "confirm": "Confirm",
+  "dark": "Dark",
+  "dataResetSuccess": "Data reset successfully",
+  "dataSourceStatement": "Data Source Statement",
+  "dataSourceStatementContent": "The real-time train dynamics in this application are retrieved from Taipei Metro's unofficial APIs. The data is provided for personal reference and programming learning purposes only. Accuracy and timeliness are not guaranteed, and it shall not be used for commercial purposes.",
+  "dataSourceStatementTitle": "Data Source Statement",
+  "delete": "Delete",
+  "deleteFavoriteStationConfirm": "Are you sure you want to delete \"{key}\"?",
+  "@deleteFavoriteStationConfirm": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteFavoriteStationTitle": "Delete Favorite Station",
+  "departing": "Departing",
+  "developer": "Developer",
+  "downloadNow": "Download Now",
+  "dynamicColorAndroidDesc": "Use Android system theme colors",
+  "dynamicColorDefaultDesc": "Use system theme colors",
+  "dynamicColorWebDesc": "Use system theme colors",
+  "dynamicColorWindowsDesc": "Use Windows system theme colors",
+  "feedback": "Feedback",
+  "feedbackSubtitle": "GitHub Issues",
   "findNearestStation": "Find Nearest Station",
+  "general": "General",
+  "home": "Home",
+  "language": "Language",
+  "later": "Later",
+  "latestVersionInstalled": "Already the latest version",
+  "light": "Light",
+  "loading": "Loading...",
   "locatingAuto": "Auto locate on startup",
+  "locatingLabel": "Locating...",
   "locatingManual": "Manual locate on tap",
   "locatingOff": "Do not show nearest station",
-  "auto": "Auto",
+  "locatingProgress": "Getting your location...",
+  "locationPermissionDenied": "Location permission denied",
+  "locationPermissionRequiredPrompt": "Location permission is required to find nearby metro stations",
   "manual": "Manual",
+  "nearestStationTitle": "Nearest Station",
+  "networkError": "Network connection error. Please check your internet connection.",
+  "nextTrain": "Next Train",
+  "noData": "No Data",
+  "noTrainsInfo": "No train information currently",
+  "noTrainsInfoManualPrompt": "(If manual refresh is enabled, please click refresh button above)",
+  "notLocatedYetLabel": "Not Located",
+  "notLocatingYetPromptEnd": " in the top-left to locate",
+  "notLocatingYetPromptStart": "Tap ",
   "off": "Off",
+  "offlineCacheWarning": "Connection failed, showing cached information",
+  "openSettingsButton": "Open Settings",
+  "openSourceLicenses": "Open Source Licenses",
+  "pureBlackDesc": "Use pure black background to reduce OLED power usage",
+  "pureBlackMode": "Pure Black Mode",
   "refreshInterval": "Auto Refresh Rate",
+  "refreshStationTooltip": "Refresh this station",
+  "removeFromFavorites": "Remove from Favorites",
+  "resetData": "Reset Data",
+  "resetFavorites": "Favorite Stations",
+  "resetSettings": "Settings",
+  "resultsFromOtherLines": "Search results from other lines",
+  "searchStationHint": "Search station name or code",
   "seconds": "{count}s",
   "@seconds": {
     "placeholders": {
@@ -24,29 +90,19 @@
       }
     }
   },
-  "resetData": "Reset Data",
-  "clearSettingsAndFavorites": "Clear settings and favorites",
-  "appearance": "Appearance",
-  "themeMode": "Theme Mode",
+  "selectThemeColor": "Select Theme Color",
+  "settings": "Settings",
+  "stationDetailTitle": "Train Dynamics",
+  "stations": "Stations",
+  "subsequentTrain": "Following Train",
+  "system": "System",
+  "systemDynamicColor": "System Dynamic Theme",
+  "themeDarkMode": "Dark mode",
   "themeFollowSystem": "Follow system settings",
   "themeLightMode": "Light mode",
-  "themeDarkMode": "Dark mode",
+  "themeMode": "Theme Mode",
   "themePureBlackDesc": "Pure black mode (reduce OLED battery drain)",
-  "system": "System",
-  "light": "Light",
-  "dark": "Dark",
-  "pureBlackMode": "Pure Black Mode",
-  "pureBlackDesc": "Use pure black background to reduce OLED power usage",
-  "systemDynamicColor": "System Dynamic Theme",
-  "dynamicColorWebDesc": "Use system theme colors",
-  "dynamicColorAndroidDesc": "Use Android system theme colors",
-  "dynamicColorWindowsDesc": "Use Windows system theme colors",
-  "dynamicColorDefaultDesc": "Use system theme colors",
-  "selectThemeColor": "Select Theme Color",
-  "about": "About",
-  "checkUpdate": "Check for Updates",
-  "latestVersionInstalled": "Already the latest version",
-  "updateAvailableTitle": "New Version Available",
+  "understand": "OK",
   "updateAvailableDesc": "New version {latestVersion} found\nCurrent version {currentVersion}\n\nWould you like to download it now?",
   "@updateAvailableDesc": {
     "placeholders": {
@@ -58,8 +114,7 @@
       }
     }
   },
-  "later": "Later",
-  "downloadNow": "Download Now",
+  "updateAvailableTitle": "New Version Available",
   "updateCheckFailed": "Failed to check update: {error}",
   "@updateCheckFailed": {
     "placeholders": {
@@ -68,64 +123,7 @@
       }
     }
   },
-  "feedback": "Feedback",
-  "feedbackSubtitle": "GitHub Issues",
-  "openSourceLicenses": "Open Source Licenses",
-  "developer": "Developer",
-  "dataSourceStatement": "Data Source Statement",
-  "dataSourceStatementTitle": "Data Source Statement",
-  "dataSourceStatementContent": "The real-time train dynamics in this application are retrieved from Taipei Metro's unofficial APIs. The data is provided for personal reference and programming learning purposes only. Accuracy and timeliness are not guaranteed, and it shall not be used for commercial purposes.",
-  "understand": "OK",
-  "cancel": "Cancel",
-  "confirm": "Confirm",
-  "resetFavorites": "Favorite Stations",
-  "resetSettings": "Settings",
-  "dataResetSuccess": "Data reset successfully",
-  "commonStations": "Favorite Stations",
-  "deleteFavoriteStationTitle": "Delete Favorite Station",
-  "deleteFavoriteStationConfirm": "Are you sure you want to delete \"{key}\"?",
-  "@deleteFavoriteStationConfirm": {
-    "placeholders": {
-      "key": {
-        "type": "String"
-      }
-    }
-  },
-  "delete": "Delete",
-  "searchStationHint": "Search station name or code",
-  "noData": "No Data",
-  "resultsFromOtherLines": "Search results from other lines",
-  "addToFavorites": "Add to Favorites",
-  "removeFromFavorites": "Remove from Favorites",
-  "nearestStationTitle": "Nearest Station",
-  "locatingProgress": "Getting your location...",
-  "locationPermissionDenied": "Location permission denied",
-  "locationPermissionRequiredPrompt": "Location permission is required to find nearby metro stations",
-  "webPermissionInstructionStart": "Please click ",
-  "webPermissionInstructionMiddle": " in the browser address bar or allow the site to access \"Location\" in the website settings card, then click ",
   "webPermissionInstructionEnd": " to relocate.",
-  "openSettingsButton": "Open Settings",
-  "notLocatingYetPromptStart": "Tap ",
-  "notLocatingYetPromptEnd": " in the top-left to locate",
-  "locatingLabel": "Locating...",
-  "notLocatedYetLabel": "Not Located",
-  "noTrainsInfo": "No train information currently",
-  "noTrainsInfoManualPrompt": "(If manual refresh is enabled, please click refresh button above)",
-  "refreshStationTooltip": "Refresh this station",
-  "offlineCacheWarning": "Connection failed, showing cached information",
-  "stationDetailTitle": "Train Dynamics",
-  "boundFor": "Bound for {destination}",
-  "@boundFor": {
-    "placeholders": {
-      "destination": {
-        "type": "String"
-      }
-    }
-  },
-  "nextTrain": "Next Train",
-  "subsequentTrain": "Following Train",
-  "approaching": "Approaching",
-  "arrived": "Arrived",
-  "departing": "Departing",
-  "loading": "Loading..."
+  "webPermissionInstructionMiddle": " in the browser address bar or allow the site to access \"Location\" in the website settings card, then click ",
+  "webPermissionInstructionStart": "Please click "
 }

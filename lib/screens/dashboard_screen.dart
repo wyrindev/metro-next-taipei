@@ -22,6 +22,7 @@ class _MetroDashboardState extends State<MetroDashboard> {
   bool _initialLoading = true;
   bool _nearbyLoading = false;
   Map<String, bool> _favoriteMap = {};
+  List<String> _favoriteList = [];
   List<Map<String, dynamic>> _nearestOne = [];
   Timer? _countdownTimer;
   Timer? _nearestApiTimer;
@@ -76,6 +77,7 @@ class _MetroDashboardState extends State<MetroDashboard> {
   Future<void> _loadFavorites() async {
     final items = prefs.getStringList('commonStations') ?? [];
     setState(() {
+      _favoriteList = items;
       _favoriteMap = {for (var s in items) s: true};
     });
   }
@@ -141,33 +143,47 @@ class _MetroDashboardState extends State<MetroDashboard> {
     }
   }
 
-  Future<void> _confirmDeleteStation(String key) async {
+  Future<void> _deleteStation(String key, int index) async {
+    setState(() {
+      _favoriteList.removeAt(index);
+      _favoriteMap.remove(key);
+    });
+    await prefs.setStringList('commonStations', _favoriteList);
+
+    if (!mounted) return;
+    
     final l10n = AppLocalizations.of(context)!;
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.deleteFavoriteStationTitle),
-        content: Text(l10n.deleteFavoriteStationConfirm(key)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
+    
+    // Format station display name
+    final parts = key.split(' ');
+    final String displayName;
+    if (parts.length >= 2) {
+      final id = parts[0];
+      final nameZh = parts[1];
+      final nameEn = metroDb[nameZh]?['StationEn'] ?? nameZh;
+      displayName = LocaleService.instance.currentLocale.languageCode == 'en'
+          ? "$id $nameEn"
+          : key;
+    } else {
+      displayName = key;
+    }
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${l10n.removeFromFavorites}: $displayName'),
+        action: SnackBarAction(
+          label: l10n.cancel,
+          onPressed: () async {
+            setState(() {
+              _favoriteList.insert(index, key);
+              _favoriteMap[key] = true;
+            });
+            await prefs.setStringList('commonStations', _favoriteList);
+          },
+        ),
       ),
     );
-
-    if (result == true) {
-      setState(() {
-        _favoriteMap.remove(key);
-      });
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList('commonStations', _favoriteMap.keys.toList());
-    }
   }
 
   @override
@@ -202,78 +218,110 @@ class _MetroDashboardState extends State<MetroDashboard> {
             final favoriteSection = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_favoriteMap.isNotEmpty) ...[
+                if (_favoriteList.isNotEmpty) ...[
                   Text(
                     AppLocalizations.of(context)!.commonStations,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  ..._favoriteMap.keys.map(
-                    (key) => Card(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        title: Text(() {
-                          final isEnglish = LocaleService.instance.currentLocale.languageCode == 'en';
-                          final parts = key.split(' ');
-                          if (parts.length >= 2) {
-                            final id = parts[0];
-                            final nameZh = parts[1];
-                            final nameEn = metroDb[nameZh]?['StationEn'] ?? nameZh;
-                            return isEnglish ? "$id $nameEn" : key;
-                          }
-                          return key;
-                        }()),
-                        leading: const Icon(Icons.train),
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            showDragHandle: false,
-                            builder: (context) {
-                              final destinationsCount =
-                                  metroDb[key.split(' ')[1]]["unique_destinations_count"];
-                              final screenHeight = MediaQuery.of(context).size.height;
+                  ReorderableListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _favoriteList.length,
+                    onReorderItem: (oldIndex, newIndex) async {
+                      setState(() {
+                        final String item = _favoriteList.removeAt(oldIndex);
+                        _favoriteList.insert(newIndex, item);
+                        _favoriteMap = {for (var s in _favoriteList) s: true};
+                      });
+                      await prefs.setStringList('commonStations', _favoriteList);
+                    },
+                    itemBuilder: (context, index) {
+                      final key = _favoriteList[index];
+                      return Dismissible(
+                        key: ValueKey(key),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade800,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (direction) {
+                          _deleteStation(key, index);
+                        },
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          elevation: 0,
+                          color: colorScheme.surfaceContainer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListTile(
+                            title: Text(() {
+                              final isEnglish = LocaleService.instance.currentLocale.languageCode == 'en';
+                              final parts = key.split(' ');
+                              if (parts.length >= 2) {
+                                final id = parts[0];
+                                final nameZh = parts[1];
+                                final nameEn = metroDb[nameZh]?['StationEn'] ?? nameZh;
+                                return isEnglish ? "$id $nameEn" : key;
+                              }
+                              return key;
+                            }()),
+                            leading: const Icon(Icons.train),
+                            trailing: const Icon(Icons.drag_handle),
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                showDragHandle: false,
+                                builder: (context) {
+                                  final destinationsCount =
+                                      metroDb[key.split(' ')[1]]["unique_destinations_count"];
+                                  final screenHeight = MediaQuery.of(context).size.height;
 
-                              final double initialSize = _trainCardHeight != null
-                                  ? (_trainCardHeight! * (destinationsCount + 1.6)) / screenHeight
-                                  : (double.tryParse(
-                                          prefs.getString('trainCardHeight') ?? '0.4') ??
-                                      0.4);
+                                  final double initialSize = _trainCardHeight != null
+                                      ? (_trainCardHeight! * (destinationsCount + 1.6)) / screenHeight
+                                      : (double.tryParse(
+                                              prefs.getString('trainCardHeight') ?? '0.4') ??
+                                          0.4);
 
-                              final safeInitialSize = initialSize.clamp(0.2, 1.0);
+                                  final safeInitialSize = initialSize.clamp(0.2, 1.0);
 
-                              return DraggableScrollableSheet(
-                                expand: false,
-                                initialChildSize: safeInitialSize >= 0.9 ? 1.0 : safeInitialSize,
-                                minChildSize: 0.2,
-                                maxChildSize: 1.0,
-                                builder: (context, scrollController) {
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.surface,
-                                      borderRadius: safeInitialSize >= 0.9
-                                          ? BorderRadius.zero
-                                          : const BorderRadius.vertical(
-                                              top: Radius.circular(25),
-                                            ),
-                                    ),
-                                    child: CommonStationDetailSheet(
-                                      stationKey: key,
-                                    ),
+                                  return DraggableScrollableSheet(
+                                    expand: false,
+                                    initialChildSize: safeInitialSize >= 0.9 ? 1.0 : safeInitialSize,
+                                    minChildSize: 0.2,
+                                    maxChildSize: 1.0,
+                                    builder: (context, scrollController) {
+                                      return AnimatedContainer(
+                                        duration: const Duration(milliseconds: 300),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.surface,
+                                          borderRadius: safeInitialSize >= 0.9
+                                              ? BorderRadius.zero
+                                              : const BorderRadius.vertical(
+                                                  top: Radius.circular(25),
+                                                ),
+                                        ),
+                                        child: CommonStationDetailSheet(
+                                          stationKey: key,
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               );
                             },
-                          );
-                        },
-                        onLongPress: () => _confirmDeleteStation(key),
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ],

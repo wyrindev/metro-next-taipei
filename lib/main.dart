@@ -42,7 +42,16 @@ class MyApp extends StatelessWidget {
 
         if (themeService.dynamicColorEnabled && light != null && dark != null) {
           lightScheme = light!;
-          darkScheme = dark!;
+          
+          final darkSurface = dark!.surface;
+          final darkOnSurface = dark!.onSurface;
+          darkScheme = dark!.copyWith(
+            surfaceContainerLowest: Color.alphaBlend(darkOnSurface.withValues(alpha: 0.01), darkSurface),
+            surfaceContainerLow: Color.alphaBlend(darkOnSurface.withValues(alpha: 0.03), darkSurface),
+            surfaceContainer: Color.alphaBlend(darkOnSurface.withValues(alpha: 0.06), darkSurface),
+            surfaceContainerHigh: Color.alphaBlend(darkOnSurface.withValues(alpha: 0.09), darkSurface),
+            surfaceContainerHighest: Color.alphaBlend(darkOnSurface.withValues(alpha: 0.12), darkSurface),
+          );
         } else {
           final seedColor = themeService.currentSeedColor;
           lightScheme = ColorScheme.fromSeed(
@@ -121,6 +130,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('zh', 'TW'),
+            Locale('zh'),
             Locale('en'),
           ],
           theme: ThemeData.from(

@@ -1,24 +1,87 @@
 {
   "@@locale": "zh_TW",
-  "appTitle": "MetroNext",
-  "@appTitle": {
-    "description": "The title of the application"
+  "about": "關於",
+  "addToFavorites": "加入常用",
+  "appearance": "外觀",
+  "approaching": "即將進站",
+  "arrived": "已進站",
+  "auto": "自動",
+  "boundFor": "往 {destination}",
+  "@boundFor": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
   },
-  "home": "首頁",
-  "stations": "車站總覽",
-  "settings": "設定",
-  "general": "一般",
-  "language": "語言",
-  "chinese": "中文",
-  "english": "English",
+  "cancel": "取消",
+  "checkUpdate": "檢查更新",
+  "clearSettingsAndFavorites": "清除設定與常用",
+  "commonStations": "常用站點",
+  "confirm": "確認",
+  "dark": "深色",
+  "dataResetSuccess": "資料已重設",
+  "dataSourceStatement": "資料來源聲明",
+  "dataSourceStatementContent": "本應用程式之列車動態資訊介接自台北捷運非公開 API，相關資料僅供程式開發學習與個人參考使用，不保證其即時性與準確度，亦不得用於商業用途。",
+  "dataSourceStatementTitle": "資料來源聲明",
+  "delete": "刪除",
+  "deleteFavoriteStationConfirm": "確定要刪除「{key}」嗎？",
+  "@deleteFavoriteStationConfirm": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteFavoriteStationTitle": "刪除常用站點",
+  "departing": "列車駛離",
+  "developer": "開發者",
+  "downloadNow": "立即下載",
+  "dynamicColorAndroidDesc": "使用 Android 系統的主題色彩",
+  "dynamicColorDefaultDesc": "使用系統的主題色彩",
+  "dynamicColorWebDesc": "使用系統的主題色彩",
+  "dynamicColorWindowsDesc": "使用 Windows 系統的主題色彩",
+  "feedback": "意見反映",
+  "feedbackSubtitle": "GitHub Issues",
   "findNearestStation": "尋找最近車站",
+  "general": "一般",
+  "home": "首頁",
+  "language": "語言",
+  "later": "稍後",
+  "latestVersionInstalled": "目前已是最新版本",
+  "light": "淺色",
+  "loading": "載入中...",
   "locatingAuto": "啟動時自動定位",
+  "locatingLabel": "定位中...",
   "locatingManual": "手動按下圖示更新定位",
   "locatingOff": "不顯示附近車站",
-  "auto": "自動",
+  "locatingProgress": "正在取得您的位置...",
+  "locationPermissionDenied": "位置權限未授予",
+  "locationPermissionRequiredPrompt": "需要位置權限才能尋找附近捷運站",
   "manual": "手動",
+  "nearestStationTitle": "距離最近的車站",
+  "networkError": "網路連線異常，請檢查您的網路連線",
+  "nextTrain": "下班車",
+  "noData": "無資料",
+  "noTrainsInfo": "目前無列車資訊",
+  "noTrainsInfoManualPrompt": "（若為手動更新，請點擊上方重新整理按鈕）",
+  "notLocatedYetLabel": "尚未定位",
+  "notLocatingYetPromptEnd": " 重新定位",
+  "notLocatingYetPromptStart": "輕觸左上角 ",
   "off": "關閉",
+  "offlineCacheWarning": "無法連線，目前顯示快取資訊",
+  "openSettingsButton": "打開設定",
+  "openSourceLicenses": "開放原始碼授權",
+  "pureBlackDesc": "使用純黑色底色，減少 OLED 螢幕耗電",
+  "pureBlackMode": "純黑模式",
   "refreshInterval": "自動刷新速率",
+  "refreshStationTooltip": "刷新此站",
+  "removeFromFavorites": "移除常用",
+  "resetData": "重設資料",
+  "resetFavorites": "常用站點",
+  "resetSettings": "設定",
+  "resultsFromOtherLines": "來自其他路線的搜尋結果",
+  "searchStationHint": "搜尋站名或代碼",
   "seconds": "{count} 秒",
   "@seconds": {
     "placeholders": {
@@ -27,29 +90,19 @@
       }
     }
   },
-  "resetData": "重設資料",
-  "clearSettingsAndFavorites": "清除設定與常用",
-  "appearance": "外觀",
-  "themeMode": "主題模式",
+  "selectThemeColor": "選擇主題色彩",
+  "settings": "設定",
+  "stationDetailTitle": "列車動態",
+  "stations": "車站總覽",
+  "subsequentTrain": "後續車",
+  "system": "系統",
+  "systemDynamicColor": "系統動態配色",
+  "themeDarkMode": "深色模式",
   "themeFollowSystem": "跟隨系統",
   "themeLightMode": "淺色模式",
-  "themeDarkMode": "深色模式",
+  "themeMode": "主題模式",
   "themePureBlackDesc": "純黑模式 (減少OLED螢幕耗電)",
-  "system": "系統",
-  "light": "淺色",
-  "dark": "深色",
-  "pureBlackMode": "純黑模式",
-  "pureBlackDesc": "使用純黑色底色，減少 OLED 螢幕耗電",
-  "systemDynamicColor": "系統動態配色",
-  "dynamicColorWebDesc": "使用系統的主題色彩",
-  "dynamicColorAndroidDesc": "使用 Android 系統的主題色彩",
-  "dynamicColorWindowsDesc": "使用 Windows 系統的主題色彩",
-  "dynamicColorDefaultDesc": "使用系統的主題色彩",
-  "selectThemeColor": "選擇主題色彩",
-  "about": "關於",
-  "checkUpdate": "檢查更新",
-  "latestVersionInstalled": "目前已是最新版本",
-  "updateAvailableTitle": "有新版本可用",
+  "understand": "了解",
   "updateAvailableDesc": "發現新版本 {latestVersion}\n目前版本 {currentVersion}\n\n是否前往下載？",
   "@updateAvailableDesc": {
     "placeholders": {
@@ -61,8 +114,7 @@
       }
     }
   },
-  "later": "稍後",
-  "downloadNow": "立即下載",
+  "updateAvailableTitle": "有新版本可用",
   "updateCheckFailed": "檢查更新失敗: {error}",
   "@updateCheckFailed": {
     "placeholders": {
@@ -71,64 +123,7 @@
       }
     }
   },
-  "feedback": "意見反映",
-  "feedbackSubtitle": "GitHub Issues",
-  "openSourceLicenses": "開放原始碼授權",
-  "developer": "開發者",
-  "dataSourceStatement": "資料來源聲明",
-  "dataSourceStatementTitle": "資料來源聲明",
-  "dataSourceStatementContent": "本應用程式之列車動態資訊介接自台北捷運非公開 API，相關資料僅供程式開發學習與個人參考使用，不保證其即時性與準確度，亦不得用於商業用途。",
-  "understand": "了解",
-  "cancel": "取消",
-  "confirm": "確認",
-  "resetFavorites": "常用站點",
-  "resetSettings": "設定",
-  "dataResetSuccess": "資料已重設",
-  "commonStations": "常用站點",
-  "deleteFavoriteStationTitle": "刪除常用站點",
-  "deleteFavoriteStationConfirm": "確定要刪除「{key}」嗎？",
-  "@deleteFavoriteStationConfirm": {
-    "placeholders": {
-      "key": {
-        "type": "String"
-      }
-    }
-  },
-  "delete": "刪除",
-  "searchStationHint": "搜尋站名或代碼",
-  "noData": "無資料",
-  "resultsFromOtherLines": "來自其他路線的搜尋結果",
-  "addToFavorites": "加入常用",
-  "removeFromFavorites": "移除常用",
-  "nearestStationTitle": "距離最近的車站",
-  "locatingProgress": "正在取得您的位置...",
-  "locationPermissionDenied": "位置權限未授予",
-  "locationPermissionRequiredPrompt": "需要位置權限才能尋找附近捷運站",
-  "webPermissionInstructionStart": "請在瀏覽器網址列點擊 ",
-  "webPermissionInstructionMiddle": " 或到網站資訊卡設定允許此網站存取「位置資訊」後，點擊 ",
   "webPermissionInstructionEnd": " 重新定位。",
-  "openSettingsButton": "打開設定",
-  "notLocatingYetPromptStart": "輕觸左上角 ",
-  "notLocatingYetPromptEnd": " 重新定位",
-  "locatingLabel": "定位中...",
-  "notLocatedYetLabel": "尚未定位",
-  "noTrainsInfo": "目前無列車資訊",
-  "noTrainsInfoManualPrompt": "（若為手動更新，請點擊上方重新整理按鈕）",
-  "refreshStationTooltip": "刷新此站",
-  "offlineCacheWarning": "無法連線，目前顯示快取資訊",
-  "stationDetailTitle": "列車動態",
-  "boundFor": "往 {destination}",
-  "@boundFor": {
-    "placeholders": {
-      "destination": {
-        "type": "String"
-      }
-    }
-  },
-  "nextTrain": "下班車",
-  "subsequentTrain": "後續車",
-  "approaching": "即將進站",
-  "arrived": "已進站",
-  "departing": "列車駛離",
-  "loading": "載入中..."
+  "webPermissionInstructionMiddle": " 或到網站資訊卡設定允許此網站存取「位置資訊」後，點擊 ",
+  "webPermissionInstructionStart": "請在瀏覽器網址列點擊 "
 }

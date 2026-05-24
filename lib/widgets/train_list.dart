@@ -21,8 +21,8 @@ class _TrainListState extends State<TrainList>
     super.initState();
     _sharedController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
+      duration: const Duration(milliseconds: 2000),
+    )..repeat();
   }
 
   @override

@@ -3,7 +3,7 @@ description: "A minimalist, cross-platform companion app for the Taipei Metro sy
 
 publish_to: 'none'
 
-version: 1.0.0-beta+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.9.0
