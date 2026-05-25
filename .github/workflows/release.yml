@@ -75,10 +75,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout code (tag)
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.check-release.outputs.tag_name }}
+
+      - name: Fetch main branch for CHANGELOG
+        run: |
+          git fetch origin main:main || true
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -158,8 +162,13 @@ jobs:
 
       - name: Generate Release Notes
         run: |
-          # Extract changelog content for the current version
-          CHANGELOG_CONTENT=$(awk '/## ${{ env.VERSION_NAME }}/{flag=1;next}/##/{flag=0}flag' CHANGELOG.md)
+          # Try to read CHANGELOG from main branch (not from tag)
+          CHANGELOG_CONTENT=$(git show origin/main:CHANGELOG.md 2>/dev/null | awk '/## ${{ env.VERSION_NAME }}/{flag=1;next}/##/{flag=0}flag' || echo "")
+          
+          # Fallback if CHANGELOG entry not found
+          if [ -z "$CHANGELOG_CONTENT" ]; then
+            CHANGELOG_CONTENT="📝 See the detailed changelog at the link below."
+          fi
           
           # Calculate SHA-256 checksums
           SHA_UNIVERSAL=$(sha256sum release/MetroNext-Taipei-${{ env.VERSION_NAME }}-universal.apk | cut -d' ' -f1)
