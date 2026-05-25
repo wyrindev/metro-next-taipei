@@ -30,8 +30,9 @@ jobs:
         run: |
           # Determine the tag to use
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            # Triggered by tag push
-            TAG_NAME="${{ github.ref #refs/tags/ }}"
+            # Triggered by tag push - extract tag name from ref
+            TAG_NAME="${{ github.ref }}"
+            TAG_NAME="${TAG_NAME#refs/tags/}"
           else
             # Triggered by workflow_dispatch - get latest tag
             TAG_NAME=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
